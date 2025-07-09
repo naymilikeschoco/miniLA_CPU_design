@@ -24,7 +24,7 @@ module my_ALU(
     parameter OP_BGE = 13;
     parameter OP_BGEU = 14;
     
-    // ¼ÆËã±êÖ¾Î»f
+    // è®¡ç®—æ ‡å¿—ä½f
     assign f = (alu_op == OP_BEQ) ? (A == B) :
                (alu_op == OP_BNE) ? (A != B) :
                (alu_op == OP_BLT) ? ($signed(A) < $signed(B)) :
@@ -40,8 +40,8 @@ module my_ALU(
             OP_XOR:    C <= A ^ B;
             OP_SLL:    C <= A << B;
             OP_SRL:    C <= A >> B;
-            OP_SRA:    C <= A >>> B;  // ËãÊõÓÒÒÆ
-            OP_SLL_12: C <= A << 12;  // ¹Ì¶¨ÒÆÎ»12Î»
+            OP_SRA:    C <= A >>> B;  // ç®—æœ¯å³ç§»
+            OP_SLL_12: C <= A << 12;  // å›ºå®šç§»ä½12ä½
             default:   C <= A - B;
         endcase
     end
