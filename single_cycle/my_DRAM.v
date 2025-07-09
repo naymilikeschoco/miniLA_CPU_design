@@ -15,7 +15,7 @@ module my_DRAM(
     
     reg [31:0] wdata; //data actually written in dram
     
-    //дʱ���߼�
+    //Ð´Ê±ÐòÂß¼­
     always @ (posedge clk) begin
         case (dram_op)
             RAM_B: begin
