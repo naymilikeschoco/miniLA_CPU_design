@@ -1,11 +1,11 @@
 `timescale 1ns / 1ps
 
 module my_IROM(
-    input  wire [31:0] adr,     // Êµ¼ÊÓĞĞ§µÄÎ»¿íÓëIROMµÄÈİÁ¿ÓĞ¹Ø
+    input  wire [31:0] adr,     // å®é™…æœ‰æ•ˆçš„ä½å®½ä¸IROMçš„å®¹é‡æœ‰å…³
     output wire [31:0] inst
 );
 
-    wire [13:0] inst_addr = adr[15:2];    // PCÊÇ×Ö½ÚµØÖ·
+    wire [13:0] inst_addr = adr[15:2];    // PCæ˜¯å­—èŠ‚åœ°å€
     
     // 64KB IROM
     IROM my_IROM (
