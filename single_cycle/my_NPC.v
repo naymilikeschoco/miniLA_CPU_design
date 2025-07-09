@@ -5,7 +5,7 @@ module my_NPC(
     input  wire         br,
     input  wire [1:0]   npc_op,
     input  wire [31:0]  pc,
-    output reg [31:0]   pcb, //ÓÃÓÚĞ´»Ø
+    output reg [31:0]   pcb, //Ã“ÃƒÃ“ÃšÃÂ´Â»Ã˜
     output reg [31:0]   npc
     );
     
