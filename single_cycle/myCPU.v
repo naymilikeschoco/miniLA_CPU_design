@@ -30,7 +30,7 @@ module myCPU (
 `endif
 );
 
-    // TODO: 完成你自己的单周期CPU设计
+    // TODO: 瀹屾垚浣犺嚜宸辩殑鍗曞懆鏈烠PU璁捐
     
     wire [31:0] PC_pc;
     wire [31:0] NPC_npc;
@@ -87,7 +87,7 @@ module myCPU (
         .br         (ALU_f),
         .npc_op     (Ctrl_npc_op),
         .pc         (PC_pc),
-        .pcb        (NPC_pcb), //用于写回
+        .pcb        (NPC_pcb), //鐢ㄤ簬鍐欏洖
         .npc        (NPC_npc)
     );
 
