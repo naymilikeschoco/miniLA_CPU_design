@@ -20,7 +20,7 @@ module my_Ctrl(
     wire FUNC3 = inst[9:7];
     wire FUNC7 = inst[6:0];
     
-    //3R型
+    //3R脨脥
     wire ADD_W = (OPCODE == 000000) & (SIG == 0) & (FUNC3 == 000) & (FUNC7 == 0100000);
     wire SUB_W = (OPCODE == 000000) & (SIG == 0) & (FUNC3 == 000) & (FUNC7 == 0100010);
     wire AND   = (OPCODE == 000000) & (SIG == 0) & (FUNC3 == 000) & (FUNC7 == 0101001);
@@ -32,12 +32,12 @@ module my_Ctrl(
     wire SLT   = (OPCODE == 000000) & (SIG == 0) & (FUNC3 == 000) & (FUNC7 == 0100100);
     wire SLTU  = (OPCODE == 000000) & (SIG == 0) & (FUNC3 == 000) & (FUNC7 == 0100101);
     
-    //2RI5型
+    //2RI5脨脥
     wire SLLI_W = (OPCODE == 000000) & (SIG == 0) & (FUNC3 == 001) & (FUNC7 == 0000001);
     wire SRLI_W = (OPCODE == 000000) & (SIG == 0) & (FUNC3 == 001) & (FUNC7 == 0001001);
     wire SRAI_W = (OPCODE == 000000) & (SIG == 0) & (FUNC3 == 001) & (FUNC7 == 0010001); 
     
-    //2RI12型
+    //2RI12脨脥
     wire ADDI_W = (OPCODE == 000000) & (SIG == 1) & (FUNC3 == 010);
     wire ANDI   = (OPCODE == 000000) & (SIG == 1) & (FUNC3 == 101);
     wire ORI    = (OPCODE == 000000) & (SIG == 1) & (FUNC3 == 110);
@@ -53,11 +53,11 @@ module my_Ctrl(
     wire ST_H   = (OPCODE == 001010) & (SIG == 0) & (FUNC3 == 101);
     wire ST_W   = (OPCODE == 001010) & (SIG == 0) & (FUNC3 == 110);
     
-    //1RI20型
+    //1RI20脨脥
     wire LU12I  = (OPCODE == 000101) & (SIG == 0);
     wire PCADDU = (OPCODE == 000111) & (SIG == 0);
     
-    //2RI16型
+    //2RI16脨脥
     wire BEQ  = (OPCODE == 010110);
     wire BNE  = (OPCODE == 010111);
     wire BLT  = (OPCODE == 011000);
@@ -66,7 +66,7 @@ module my_Ctrl(
     wire BGEU = (OPCODE == 011011);
     wire JIRL = (OPCODE == 010011);
     
-    //I26型
+    //I26脨脥
     wire B  = (OPCODE == 010100);
     wire BL = (OPCODE == 010101);
     
