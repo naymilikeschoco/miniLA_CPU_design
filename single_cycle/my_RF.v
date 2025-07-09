@@ -16,15 +16,15 @@ module my_RF(
     parameter RD1_2R = 1; 
     
     reg [31:0] Regs[4:0];
-    //Ğ´Ê±ĞòÂß¼­
+    //å†™æ—¶åºé€»è¾‘
     always @ (posedge clk) begin
         Regs[0] <= 0; //$zero always == 0
-        if(we) begin //Ğ´Ê¹ÄÜ
+        if(we) begin //å†™ä½¿èƒ½
             Regs[wR] <= wD;
         end
     end
     
-    //¶Á×éºÏÂß¼­
+    //è¯»ç»„åˆé€»è¾‘
     assign rD1 = (rd1_op == RD1_3R)? Regs[rR1]: Regs[wR];
     assign rD2 = Regs[rR2];
     
