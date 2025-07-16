@@ -30,7 +30,7 @@ module myCPU (
 //`endif
 );
 
-    // TODO: Íê³ÉÄã×Ô¼ºµÄµ¥ÖÜÆÚCPUÉè¼Æ
+    // TODO: å®Œæˆä½ è‡ªå·±çš„å•å‘¨æœŸCPUè®¾è®¡
     
     wire [31:0] PC_pc;
     wire [31:0] NPC_npc;
@@ -81,7 +81,7 @@ module myCPU (
     reg [31:0] RF_wD;
     my_wd_mux cpu_wd_mux(
         .rf_wd_sel       (Ctrl_rf_wd_sel),
-        .addr            (Bus_addr[1:0]),       //ÓÃÓÚ°ë×ÖºÍ×Ö½ÚÔØÈë
+        .addr            (Bus_addr[1:0]),       //ç”¨äºåŠå­—å’Œå­—èŠ‚è½½å…¥
         .ALU_C           (ALU_C),
         .ALU_f           (ALU_f),
         .SEXT_ext2       (SEXT_ext2),
@@ -111,7 +111,7 @@ module myCPU (
         .br         (ALU_f),
         .npc_op     (Ctrl_npc_op),
         .pc         (PC_pc),
-        .pcb        (NPC_pcb), //ÓÃÓÚĞ´»Ø
+        .pcb        (NPC_pcb), //ç”¨äºå†™å›
         .npc        (NPC_npc)
     );
 
@@ -131,7 +131,7 @@ module myCPU (
         .din1_ex    (inst[25:0]),
         .din2_wb    (Bus_rdata),
         .sext_op    (Ctrl_sext_op),
-        .addr       (Bus_addr[1:0]),       //ÓÃÓÚ°ë×ÖºÍ×Ö½ÚÔØÈë
+        .addr       (Bus_addr[1:0]),       //ç”¨äºåŠå­—å’Œå­—èŠ‚è½½å…¥
         .ext1       (SEXT_ext1),    
         .ext2       (SEXT_ext2)              // output wire [31:0]
     );
