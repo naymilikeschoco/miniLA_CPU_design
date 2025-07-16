@@ -33,7 +33,7 @@ module my_wd_mux(
                 endcase
             `WD_RDO: RF_wD = Bus_rdata;
             `WD_PCB: RF_wD = NPC_pcb;
-            default: RF_wD = 32'b0;  // 添加默认情况
+            default: RF_wD = 32'b0;  // 脤铆录脫脛卢脠脧脟茅驴枚
         endcase
     end
     
