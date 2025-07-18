@@ -5,13 +5,13 @@ module my_LEDS(
     input wire         clk,
     //input wire [31:0]  addr,
     input wire         we,
-    input wire [31:0]  wdata,
-    output reg [31:0]  led_data
+    input wire [15:0]  wdata,
+    output reg [15:0]  led_data
     );
     
     always @(posedge clk or posedge rst) begin
         if(rst) begin
-            led_data <= 32'h0;
+            led_data <= 16'h0;
         end
         else begin
             if(we)begin
