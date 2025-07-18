@@ -7,7 +7,7 @@ module my_Ctrl(
     //input wire           rst,
     output wire          pc_sel,
     output wire [1:0]    npc_op,
-    output wire          rd1_op,
+    output wire [1:0]    rf_op,
     output wire          rf_we,
     output wire [2:0]    rf_wd_sel,
     output wire [2:0]    sext_op,
@@ -24,7 +24,7 @@ module my_Ctrl(
     wire [2:0] FUNC3 = inst[9:7];
     wire [6:0] FUNC7 = inst[6:0];
     
-    //3RÐÍ
+    //3R型
     wire ADD_W = (OPCODE == 6'b000000) & (SIG == 1'b0) & (FUNC3 == 3'b000) & (FUNC7 == 7'b0100000);
     wire SUB_W = (OPCODE == 6'b000000) & (SIG == 1'b0) & (FUNC3 == 3'b000) & (FUNC7 == 7'b0100010);
     wire AND   = (OPCODE == 6'b000000) & (SIG == 1'b0) & (FUNC3 == 3'b000) & (FUNC7 == 7'b0101001);
@@ -36,12 +36,12 @@ module my_Ctrl(
     wire SLT   = (OPCODE == 6'b000000) & (SIG == 1'b0) & (FUNC3 == 3'b000) & (FUNC7 == 7'b0100100);
     wire SLTU  = (OPCODE == 6'b000000) & (SIG == 1'b0) & (FUNC3 == 3'b000) & (FUNC7 == 7'b0100101);
     
-    //2RI5ÐÍ
+    //2RI5型
     wire SLLI_W = (OPCODE == 6'b000000) & (SIG == 1'b0) & (FUNC3 == 3'b001) & (FUNC7 == 7'b0000001);
     wire SRLI_W = (OPCODE == 6'b000000) & (SIG == 1'b0) & (FUNC3 == 3'b001) & (FUNC7 == 7'b0001001);
     wire SRAI_W = (OPCODE == 6'b000000) & (SIG == 1'b0) & (FUNC3 == 3'b001) & (FUNC7 == 7'b0010001); 
     
-    //2RI12ÐÍ
+    //2RI12型
     wire ADDI_W = (OPCODE == 6'b000000) & (SIG == 1'b1) & (FUNC3 == 3'b010);
     wire ANDI   = (OPCODE == 6'b000000) & (SIG == 1'b1) & (FUNC3 == 3'b101);
     wire ORI    = (OPCODE == 6'b000000) & (SIG == 1'b1) & (FUNC3 == 3'b110);
@@ -57,11 +57,11 @@ module my_Ctrl(
     wire ST_H   = (OPCODE == 6'b001010) & (SIG == 1'b0) & (FUNC3 == 3'b101);
     wire ST_W   = (OPCODE == 6'b001010) & (SIG == 1'b0) & (FUNC3 == 3'b110);
     
-    //1RI20ÐÍ
+    //1RI20型
     wire LU12I  = (OPCODE == 6'b000101) & (SIG == 1'b0);
     wire PCADDU = (OPCODE == 6'b000111) & (SIG == 1'b0);
     
-    //2RI16ÐÍ
+    //2RI16型
     wire BEQ  = (OPCODE == 6'b010110);
     wire BNE  = (OPCODE == 6'b010111);
     wire BLT  = (OPCODE == 6'b011000);
@@ -70,7 +70,7 @@ module my_Ctrl(
     wire BGEU = (OPCODE == 6'b011011);
     wire JIRL = (OPCODE == 6'b010011);
     
-    //I26ÐÍ
+    //I26型
     wire B  = (OPCODE == 6'b010100);
     wire BL = (OPCODE == 6'b010101);
     
@@ -86,7 +86,11 @@ module my_Ctrl(
                     | {2{npc_op_pc4_add}} & `NPC_PC4_ADD;
                 
     wire rd1_op_2r = BEQ | BNE | BLT | BLTU | BGE | BGEU | ST_B | ST_H | ST_W;
-    assign rd1_op = (rd1_op_2r) ? `RD1_2R : `RD1_3R;
+    wire wR_1 = BL;
+    wire rd1_op_3r = !(rd1_op_2r | wR_1);
+    assign rf_op = {2{rd1_op_2r}} & `RD1_2R
+                    | {2{rd1_op_3r}} & `RD1_3R
+                    | {2{wR_1}} & `WR_1;
           
     wire rf_we_not = BEQ | BNE | BLT | BLTU | BGE | BGEU | ST_B | ST_H | ST_W | B;
     assign rf_we = rf_we_not ? 0 : 1;
