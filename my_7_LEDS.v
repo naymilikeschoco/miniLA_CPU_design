@@ -1,22 +1,15 @@
 `timescale 1ns / 1ps
-//Æß¶ÎÊıÂë¹Ü
 
 module my_7_LEDS(
-    input wire         rst,
-    input wire         clk,
-    //input wire [31:0]  addr,
-    input wire         we,
-    input wire [31:0]  wdata,
-    //output reg [31:0]  seg_reg,     // ´æ´¢ÒªÏÔÊ¾µÄÊı¾İ
-    output reg [7:0]   seg_en,      // ÊıÂë¹ÜÎ»Ñ¡£¨¹²8¸ö£©
-    output reg [7:0]   seg_data     // 7¶ÎÂëÊä³ö£¨aµ½g + Ğ¡Êıµãdp£©
+    input wire         clk,        // ç³»ç»Ÿæ—¶é’Ÿ(å»ºè®®50MHzæˆ–æ›´é«˜)
+    input wire         rst,        // å¤ä½ä¿¡å·(é«˜ç”µå¹³æœ‰æ•ˆ)
+    input wire         we,         // å†™ä½¿èƒ½
+    input wire [31:0]  wdata,      // å†™å…¥æ•°æ®(8ä½æ•°ç ç®¡æ•°æ®)
+    output reg [7:0]   dig_en,
+    output reg [7:0]   seg_data         
 );
 
-    // ÊıÂë¹ÜÉ¨Ãè¼ÆÊıÆ÷£¨ÓÃÓÚ¶¯Ì¬Ë¢ĞÂ£©
-    reg [19:0] scan_cnt;
-    reg [2:0]  sel;                // µ±Ç°Ñ¡ÔñµÄÊıÂë¹Ü£¨0µ½7£©
-
-    // 7¶ÎÒëÂë±í£¨¹²Òõ¼«ÊıÂë¹Ü£¬0µ½FµÄÏÔÊ¾±àÂë£©
+    // 7æ®µè¯‘ç è¡¨(å…±é˜´ææ•°ç ç®¡)
     reg [7:0] seg_table [0:15];
     initial begin
         seg_table[0]  = 8'h3f; // 0
@@ -36,52 +29,78 @@ module my_7_LEDS(
         seg_table[14] = 8'h79; // E
         seg_table[15] = 8'h71; // F
     end
-
-    reg [31:0]  seg_reg;     // ´æ´¢ÒªÏÔÊ¾µÄÊı¾İ
-    // Ğ´Èëwdata µ½ seg_reg
+    
+    // æ˜¾ç¤ºæ•°æ®å¯„å­˜å™¨
+    reg [31:0] seg_reg;
+    
+    // å†™å…¥æ•°æ®åˆ°æ˜¾ç¤ºå¯„å­˜å™¨
     always @(posedge clk or posedge rst) begin
         if (rst) begin
             seg_reg <= 32'h0;
         end
         else if (we) begin
-            seg_reg <= wdata;  // ´æ´¢ÒªÏÔÊ¾µÄÊı¾İ£¨32Î» = 8Î»ÊıÂë¹Ü ¡Á 4Î»Êı¾İ£©
+            seg_reg <= wdata;
         end
     end
-
-    // ¶¯Ì¬É¨ÃèÂß¼­£¬Ã¿¸ôÒ»¶ÎÊ±¼äÇĞ»»Ò»¸öÊıÂë¹Ü
+    
+    reg [17:0] cnt;
+    parameter CNT_MAX = 50000;
     always @(posedge clk or posedge rst) begin
-        if (rst) begin
-            scan_cnt <= 20'h0;
-            sel <= 3'h0;
-        end
-        else begin
-            scan_cnt <= scan_cnt + 1;
-            if (scan_cnt == 20'hfffff) begin  // µ÷ÕûÉ¨ÃèÆµÂÊ£¨·ÀÖ¹ÉÁË¸£©
-                sel <= sel + 1;
-                if (sel == 3'h7) sel <= 3'h0;
+        if(rst== 1) begin
+            cnt <= 0;
+        end else begin
+            if(cnt == CNT_MAX) begin
+                cnt <= 0;
+            end else begin
+                cnt <= cnt+1;
             end
         end
     end
-
-    // ÊıÂë¹ÜÎ»Ñ¡ĞÅºÅ£¨¹²Òõ¼«ÊıÂë¹Ü£¬µÍµçÆ½ÓĞĞ§£©
-    always @(*) begin
-        seg_en = 8'b1111_1111;      // Ä¬ÈÏÈ«¹Ø±Õ
-        seg_en[sel] = 1'b0;         // Ñ¡ÖĞµ±Ç°ÊıÂë¹Ü
+    
+    always @ (posedge clk or posedge rst) begin
+        if (rst) begin 
+            dig_en <= 8'b00000001;
+        end
+        else if (cnt == CNT_MAX) begin
+            dig_en <= {dig_en[6:0], dig_en[7]}; 
+        end
     end
-
-    // 7¶ÎÒëÂëÊä³ö£¨´Ó seg_reg ÌáÈ¡µ±Ç°ÊıÂë¹ÜµÄÊı¾İ£©
-    always @(*) begin
-        case (sel)
-            3'h0: seg_data = seg_table[seg_reg[3:0]];    // µÚ0Î»ÊıÂë¹Ü
-            3'h1: seg_data = seg_table[seg_reg[7:4]];    // µÚ1Î»ÊıÂë¹Ü
-            3'h2: seg_data = seg_table[seg_reg[11:8]];   // µÚ2Î»ÊıÂë¹Ü
-            3'h3: seg_data = seg_table[seg_reg[15:12]];  // µÚ3Î»ÊıÂë¹Ü
-            3'h4: seg_data = seg_table[seg_reg[19:16]];  // µÚ4Î»ÊıÂë¹Ü
-            3'h5: seg_data = seg_table[seg_reg[23:20]];  // µÚ5Î»ÊıÂë¹Ü
-            3'h6: seg_data = seg_table[seg_reg[27:24]];  // µÚ6Î»ÊıÂë¹Ü
-            3'h7: seg_data = seg_table[seg_reg[31:28]];  // µÚ7Î»ÊıÂë¹Ü
-            default: seg_data = 8'h00;
+    
+    reg [3:0] hex_code;
+    always @ (*) begin
+        case (dig_en)
+            8'b1000_0000: hex_code = seg_reg[31:28];
+            8'b0100_0000: hex_code = seg_reg[27:24];
+            8'b0010_0000: hex_code = seg_reg[23:20];
+            8'b0001_0000: hex_code = seg_reg[19:16];
+            8'b0000_1000: hex_code = seg_reg[15:12];
+            8'b0000_0100: hex_code = seg_reg[11:8];
+            8'b0000_0010: hex_code = seg_reg[7:4];
+            8'b0000_0001: hex_code = seg_reg[3:0];
+            default     : hex_code = 4'h0;
         endcase
     end
-
+    
+    always @ (*) begin
+        case (hex_code)
+            4'h0: seg_data = seg_table[0];
+            4'h1: seg_data = seg_table[1];
+            4'h2: seg_data = seg_table[2];
+            4'h3: seg_data = seg_table[3];
+            4'h4: seg_data = seg_table[4];
+            4'h5: seg_data = seg_table[5];
+            4'h6: seg_data = seg_table[6];
+            4'h7: seg_data = seg_table[7];
+            4'h8: seg_data = seg_table[8];
+            4'h9: seg_data = seg_table[9];
+            4'ha: seg_data = seg_table[10];
+            4'hb: seg_data = seg_table[11];
+            4'hc: seg_data = seg_table[12];
+            4'hd: seg_data = seg_table[13];
+            4'he: seg_data = seg_table[14];
+            4'hf: seg_data = seg_table[15];
+            default: seg_data = seg_table[0];
+        endcase
+    end
+    
 endmodule
