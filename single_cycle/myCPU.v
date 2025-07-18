@@ -20,14 +20,14 @@ module myCPU (
     output wire         Bus_we,
     output reg  [31:0]  Bus_wdata
 
-//`ifdef RUN_TRACE
+`ifdef RUN_TRACE
     ,// Debug Interface
     output wire         debug_wb_have_inst,
     output wire [31:0]  debug_wb_pc,
     output wire         debug_wb_ena,
     output wire [ 4:0]  debug_wb_reg,
     output wire [31:0]  debug_wb_value
-//`endif
+`endif
 );
 
     // TODO: 完成你自己的单周期CPU设计
@@ -46,7 +46,7 @@ module myCPU (
 
     wire       Ctrl_pc_sel;
     wire [1:0] Ctrl_npc_op;
-    wire       Ctrl_rd1_op;
+    wire [1:0] Ctrl_rf_op;
     wire       Ctrl_rf_we;
     wire [2:0] Ctrl_rf_wd_sel;
     wire [2:0] Ctrl_sext_op;
@@ -59,7 +59,7 @@ module myCPU (
         .inst       (inst[31:15]), //input wire [16:0]
         .pc_sel     (Ctrl_pc_sel),
         .npc_op     (Ctrl_npc_op),
-        .rd1_op     (Ctrl_rd1_op),
+        .rf_op      (Ctrl_rf_op),
         .rf_we      (Ctrl_rf_we),
         .rf_wd_sel  (Ctrl_rf_wd_sel),
         .sext_op    (Ctrl_sext_op),
@@ -78,7 +78,7 @@ module myCPU (
     wire [31:0] NPC_offset;
     assign NPC_offset = (Ctrl_off_sel)? ALU_C : SEXT_ext1;
     
-    reg [31:0] RF_wD;
+    wire [31:0] RF_wD;
     my_wd_mux cpu_wd_mux(
         .rf_wd_sel       (Ctrl_rf_wd_sel),
         .addr            (Bus_addr[1:0]),       //用于半字和字节载入
@@ -90,7 +90,7 @@ module myCPU (
         .RF_wD           (RF_wD)
     );
 
-    reg [31:0] ALU_A;
+    wire [31:0] ALU_A;
     a_sel_mux  cpu_A_mux(
         .A_sel       (Ctrl_A_sel),
         .RF_rD1      (RF_rD1),
@@ -120,7 +120,7 @@ module myCPU (
         .rR1        (inst[14:10]),     // input  wire [ 4:0]
         .rR2        (inst[9:5]),       // input  wire [ 4:0]
         .wR         (inst[4:0]),       // input  wire [ 4:0]
-        .rd1_op     (Ctrl_rd1_op),
+        .rf_op      (Ctrl_rf_op),
         .we         (Ctrl_rf_we),           // input  wire
         .wD         (RF_wD),                // input  wire [31:0]
         .rD1        (RF_rD1),               // output reg  [31:0]
