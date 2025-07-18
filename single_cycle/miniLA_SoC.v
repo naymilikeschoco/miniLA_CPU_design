@@ -7,6 +7,7 @@ module miniLA_SoC (
     input  wire         fpga_clk,
 
     input  wire [15:0]  sw,
+    input  wire [ 4:0]  button,
     output wire [ 7:0]  dig_en,
     output wire         DN_A0, DN_A1,
     output wire         DN_B0, DN_B1,
@@ -16,15 +17,16 @@ module miniLA_SoC (
     output wire         DN_F0, DN_F1,
     output wire         DN_G0, DN_G1,
     output wire         DN_DP0, DN_DP1,
-    output wire [31:0]  led,
+    output wire [15:0]  led
     
-    // Debug Interface
-    output wire         debug_wb_have_inst, // å½“å‰æ—¶é’Ÿå‘¨æœŸæ˜¯å¦æœ‰æŒ‡ä»¤å†™å›? (å¯¹å•å‘¨æœŸCPUï¼Œå¯åœ¨å¤ä½åŽæ’ç½®1)
-    output wire [31:0]  debug_wb_pc,        // å½“å‰å†™å›žçš„æŒ‡ä»¤çš„PC (è‹¥wb_have_inst=0ï¼Œæ­¤é¡¹å¯ä¸ºä»»æ„å??)
-    output              debug_wb_ena,       // æŒ‡ä»¤å†™å›žæ—¶ï¼Œå¯„å­˜å™¨å †çš„å†™ä½¿èƒ½ (è‹¥wb_have_inst=0ï¼Œæ­¤é¡¹å¯ä¸ºä»»æ„å??)
-    output wire [ 4:0]  debug_wb_reg,       // æŒ‡ä»¤å†™å›žæ—¶ï¼Œå†™å…¥çš„å¯„å­˜å™¨å? (è‹¥wb_enaæˆ–wb_have_inst=0ï¼Œæ­¤é¡¹å¯ä¸ºä»»æ„å??)
-    output wire [31:0]  debug_wb_value      // æŒ‡ä»¤å†™å›žæ—¶ï¼Œå†™å…¥å¯„å­˜å™¨çš„å€? (è‹¥wb_enaæˆ–wb_have_inst=0ï¼Œæ­¤é¡¹å¯ä¸ºä»»æ„å??)
-
+    `ifdef RUN_TRACE
+    ,// Debug Interface
+    output wire         debug_wb_have_inst, // 褰撳墠鏃堕挓鍛ㄦ湡鏄惁鏈夋寚浠ゅ啓鍥? (瀵瑰崟鍛ㄦ湡CPU锛屽彲鍦ㄥ浣嶅悗鎭掔疆1)
+    output wire [31:0]  debug_wb_pc,        // 褰撳墠鍐欏洖鐨勬寚浠ょ殑PC (鑻b_have_inst=0锛屾椤瑰彲涓轰换鎰忓??)
+    output              debug_wb_ena,       // 鎸囦护鍐欏洖鏃讹紝瀵勫瓨鍣ㄥ爢鐨勫啓浣胯兘 (鑻b_have_inst=0锛屾椤瑰彲涓轰换鎰忓??)
+    output wire [ 4:0]  debug_wb_reg,       // 鎸囦护鍐欏洖鏃讹紝鍐欏叆鐨勫瘎瀛樺櫒鍙? (鑻b_ena鎴杦b_have_inst=0锛屾椤瑰彲涓轰换鎰忓??)
+    output wire [31:0]  debug_wb_value      // 鎸囦护鍐欏洖鏃讹紝鍐欏叆瀵勫瓨鍣ㄧ殑鍊? (鑻b_ena鎴杦b_have_inst=0锛屾椤瑰彲涓轰换鎰忓??)
+    `endif
 );
 
     wire        pll_lock;
@@ -51,7 +53,7 @@ module miniLA_SoC (
   
     
     // Interface between bridge and peripherals
-    // TODO: åœ¨æ­¤å®šä¹‰æ€»çº¿æ¡¥ä¸Žå¤–è®¾I/OæŽ¥å£ç”µè·¯æ¨¡å—çš„è¿žæŽ¥ä¿¡å?
+    // TODO: 鍦ㄦ瀹氫箟鎬荤嚎妗ヤ笌澶栬I/O鎺ュ彛鐢佃矾妯″潡鐨勮繛鎺ヤ俊鍙?
     // Interface to 7-seg digital LEDs?
     wire         rst_2_dig;
     wire         clk_2_dig;
@@ -62,11 +64,11 @@ module miniLA_SoC (
     wire         rst_2_led;
     wire         clk_2_led;
     wire         we_2_led;
-    wire [31:0]  wdata_2_led;
+    wire [15:0]  wdata_2_led;
 
     // Interface to switches
-    wire         rst_2_sw;
-    wire         clk_2_sw;
+//    wire         rst_2_sw;
+//    wire         clk_2_sw;
     wire [31:0]  rdata_4_sw;
 
     // Interface to Timer
@@ -76,6 +78,11 @@ module miniLA_SoC (
     wire [31:0]  wdata_2_tim;
     wire [31:0]  addr_2_tim;
     wire [31:0]  rdata_4_tim;
+    
+    // Interface to buttons
+    wire         rst_2_btn;
+    wire         clk_2_btn;
+    wire [4:0]   rdata_4_btn;
     //
 
     assign DN_A1 = DN_A0;
@@ -87,9 +94,14 @@ module miniLA_SoC (
     assign DN_G1 = DN_G0;
     assign DN_DP1 = DN_DP0;
     
-    
-    // Traceè°ƒè¯•æ—¶ï¼Œç›´æŽ¥ä½¿ç”¨å¤–éƒ¨è¾“å…¥æ—¶é’Ÿ
-    assign cpu_clk = fpga_clk;
+    // 下板时，使用PLL分频后的时钟
+    assign cpu_clk = pll_clk & pll_lock;
+    cpuclk Clkgen (
+        // .resetn     (!fpga_rst),
+        .clk_in1    (fpga_clk),
+        .clk_out1   (pll_clk),
+        .locked     (pll_lock)
+    );
 
     
     myCPU Core_cpu (
@@ -151,8 +163,8 @@ module miniLA_SoC (
         .wdata_to_led       (wdata_2_led),
 
         // Interface to switches
-        .rst_to_sw          (rst_2_sw),
-        .clk_to_sw          (clk_2_sw),
+//        .rst_to_sw          (rst_2_sw),
+//        .clk_to_sw          (clk_2_sw),
         .rdata_from_sw      (rdata_4_sw),
 
         // Interface to timer
@@ -161,7 +173,12 @@ module miniLA_SoC (
         .wen_to_tim         (wen_2_tim),
         .wdata_to_tim       (wdata_2_tim),
         .addr_to_tim        (addr_2_tim),
-        .rdata_from_tim     (rdata_4_tim)
+        .rdata_from_tim     (rdata_4_tim),
+        
+        // Interface to buttons
+        .rst_to_btn         (rst_2_btn),
+        .clk_to_btn         (clk_2_btn),
+        .rdata_from_btn     (rdata_4_btn)
     );
 
     // DRAM
@@ -173,14 +190,14 @@ module miniLA_SoC (
         .d      (wdata_bridge2dram)
     );
     
-    // TODO: åœ¨æ­¤å®žä¾‹åŒ–ä½ çš„å¤–è®¾I/OæŽ¥å£ç”µè·¯æ¨¡å—
+    // TODO: 鍦ㄦ瀹炰緥鍖栦綘鐨勫璁綢/O鎺ュ彛鐢佃矾妯″潡
     my_7_LEDS cpu_7seg_led(
         .rst        (rst_2_dig),
         .clk        (clk_2_dig),
         .we         (we_2_dig),
         .wdata      (wdata_2_dig),
-        .seg_en     (dig_en),      // æ•°ç ç®¡ä½é€‰ï¼ˆå…?8ä¸ªï¼‰
-        .seg_data   ({DN_A1,DN_B1,DN_C1,DN_D1,DN_E1,DN_F1,DN_G1,DN_DP1})
+        .dig_en     (dig_en), 
+        .seg_data   ({DN_DP0,DN_G0,DN_F0,DN_E0,DN_D0,DN_C0,DN_B0,DN_A0})
 );
     
     my_LEDS cpu_led(
@@ -192,13 +209,13 @@ module miniLA_SoC (
     );
     
     my_switches cpu_sw(
-        .rst        (rst_2_sw),
-        .clk        (clk_2_sw),
+//        .rst        (rst_2_sw),
+//        .clk        (clk_2_sw),
         .sw_input   (sw),
         .rdata      (rdata_4_sw)
     );
     
-    my_TIMER cpu_timer(
+    my_timer cpu_timer(
         .rst        (rst_2_tim),
         .clk        (clk_2_tim),
         .wen        (wen_2_tim),
@@ -206,6 +223,14 @@ module miniLA_SoC (
         .addr       (addr_2_tim),
         .rdata      (rdata_4_tim)
     );
+    
+    my_buttons cpu_buttons(
+        .clk        (clk_2_btn),
+        .rst        (rst_2_btn),
+        .btn_raw    (button),
+        .btn_out    (rdata_4_btn)
+    );
+    
     //
 
 
