@@ -9,8 +9,9 @@
 `define NPC_PC4_ADD  2'b11
 
 //RF
-`define RD1_3R 1'b0
-`define RD1_2R 1'b1
+`define RD1_3R 1'b00
+`define RD1_2R 1'b01
+`define WR_1   2'b10
 
 //SEXT
 `define SEXT_I5     3'b000
