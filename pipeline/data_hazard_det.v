@@ -26,22 +26,22 @@ module hazard_det(
     output wire      flush_id_ex
     );
     
-        //RAWÃ°ÏÕÇéĞÎA£º
+        //RAWå†’é™©æƒ…å½¢Aï¼š
     assign rs1_id_ex_hazard = (ID_EX_wR != 5'b0) & (ID_EX_wR == ID_rs1) & ID_EX_rf_we & Ctrl_id_rf1;
     assign rs2_id_ex_hazard = (ID_EX_wR != 5'b0) & (ID_EX_wR == ID_rs2) & ID_EX_rf_we & Ctrl_id_rf2;
-//    wire stop_3 = (rs1_id_ex_hazard | rs2_id_ex_hazard); //ÔİÍ£3¸öÖÜÆÚ
+//    wire stop_3 = (rs1_id_ex_hazard | rs2_id_ex_hazard); //æš‚åœ3ä¸ªå‘¨æœŸ
     
-    //RAWÃ°ÏÕÇéĞÎB£º
+    //RAWå†’é™©æƒ…å½¢Bï¼š
     assign rs1_id_mem_hazard = (EX_MEM_wR != 5'b0) & (EX_MEM_wR == ID_rs1) & EX_MEM_rf_we & Ctrl_id_rf1;
     assign rs2_id_mem_hazard = (EX_MEM_wR != 5'b0) & (EX_MEM_wR == ID_rs2) & EX_MEM_rf_we & Ctrl_id_rf2;
-//    wire stop_2 = (rs1_id_mem_hazard | rs2_id_mem_hazard); //ÔİÍ£2¸öÖÜÆÚ
+//    wire stop_2 = (rs1_id_mem_hazard | rs2_id_mem_hazard); //æš‚åœ2ä¸ªå‘¨æœŸ
     
-    //RAWÃ°ÏÕÇéĞÎC£º
+    //RAWå†’é™©æƒ…å½¢Cï¼š
     assign rs1_id_wb_hazard = (MEM_WB_wR != 0) & (MEM_WB_wR == ID_rs1) & MEM_WB_rf_we & Ctrl_id_rf1;
     assign rs2_id_wb_hazard = (MEM_WB_wR != 0) & (MEM_WB_wR == ID_rs2) & MEM_WB_rf_we & Ctrl_id_rf2;
-//    wire stop_1 = (rs1_id_wb_hazard | rs2_id_wb_hazard); //ÔİÍ£1¸öÖÜÆÚ
+//    wire stop_1 = (rs1_id_wb_hazard | rs2_id_wb_hazard); //æš‚åœ1ä¸ªå‘¨æœŸ
     
-    // ±ØĞëÔİÍ£µÄLoad-UseÃ°ÏÕ
+    // å¿…é¡»æš‚åœçš„Load-Useå†’é™©
     wire rs1_load_use;
     wire rs2_load_use;
     assign rs1_load_use = rs1_id_ex_hazard & ID_EX_load;
