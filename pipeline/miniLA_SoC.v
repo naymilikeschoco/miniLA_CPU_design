@@ -21,11 +21,11 @@ module miniLA_SoC (
     
     `ifdef RUN_TRACE
     ,// Debug Interface
-    output wire         debug_wb_have_inst, // µ±Ç°Ê±ÖÓÖÜÆÚÊÇ·ñÓĞÖ¸ÁîĞ´?? (¶Ôµ¥ÖÜÆÚCPU£¬¿ÉÔÚ¸´Î»ºóºãÖÃ1)
-    output wire [31:0]  debug_wb_pc,        // µ±Ç°Ğ´»ØµÄÖ¸ÁîµÄPC (Èôwb_have_inst=0£¬´ËÏî¿ÉÎªÈÎÒâ???)
-    output              debug_wb_ena,       // Ö¸ÁîĞ´»ØÊ±£¬¼Ä´æÆ÷¶ÑµÄĞ´Ê¹ÄÜ (Èôwb_have_inst=0£¬´ËÏî¿ÉÎªÈÎÒâ???)
-    output wire [ 4:0]  debug_wb_reg,       // Ö¸ÁîĞ´»ØÊ±£¬Ğ´ÈëµÄ¼Ä´æÆ÷?? (Èôwb_ena»òwb_have_inst=0£¬´ËÏî¿ÉÎªÈÎÒâ???)
-    output wire [31:0]  debug_wb_value      // Ö¸ÁîĞ´»ØÊ±£¬Ğ´Èë¼Ä´æÆ÷µÄ?? (Èôwb_ena»òwb_have_inst=0£¬´ËÏî¿ÉÎªÈÎÒâ???)
+    output wire         debug_wb_have_inst, // å½“å‰æ—¶é’Ÿå‘¨æœŸæ˜¯å¦æœ‰æŒ‡ä»¤å†™?? (å¯¹å•å‘¨æœŸCPUï¼Œå¯åœ¨å¤ä½åæ’ç½®1)
+    output wire [31:0]  debug_wb_pc,        // å½“å‰å†™å›çš„æŒ‡ä»¤çš„PC (è‹¥wb_have_inst=0ï¼Œæ­¤é¡¹å¯ä¸ºä»»æ„???)
+    output              debug_wb_ena,       // æŒ‡ä»¤å†™å›æ—¶ï¼Œå¯„å­˜å™¨å †çš„å†™ä½¿èƒ½ (è‹¥wb_have_inst=0ï¼Œæ­¤é¡¹å¯ä¸ºä»»æ„???)
+    output wire [ 4:0]  debug_wb_reg,       // æŒ‡ä»¤å†™å›æ—¶ï¼Œå†™å…¥çš„å¯„å­˜å™¨?? (è‹¥wb_enaæˆ–wb_have_inst=0ï¼Œæ­¤é¡¹å¯ä¸ºä»»æ„???)
+    output wire [31:0]  debug_wb_value      // æŒ‡ä»¤å†™å›æ—¶ï¼Œå†™å…¥å¯„å­˜å™¨çš„?? (è‹¥wb_enaæˆ–wb_have_inst=0ï¼Œæ­¤é¡¹å¯ä¸ºä»»æ„???)
     `endif
 );
 
@@ -53,7 +53,7 @@ module miniLA_SoC (
   
     
     // Interface between bridge and peripherals
-    // TODO: ÔÚ´Ë¶¨Òå×ÜÏßÇÅÓëÍâÉèI/O½Ó¿ÚµçÂ·Ä£¿éµÄÁ¬½ÓĞÅ??
+    // TODO: åœ¨æ­¤å®šä¹‰æ€»çº¿æ¡¥ä¸å¤–è®¾I/Oæ¥å£ç”µè·¯æ¨¡å—çš„è¿æ¥ä¿¡??
     // Interface to 7-seg digital LEDs?
     wire         rst_2_dig;
     wire         clk_2_dig;
@@ -94,7 +94,7 @@ module miniLA_SoC (
     assign DN_G1 = DN_G0;
     assign DN_DP1 = DN_DP0;
     
-    // ?¡ã???????PLL?????????
+    // ?Â°???????PLL?????????
     assign cpu_clk = pll_clk & pll_lock;
     cpuclk Clkgen (
         // .resetn     (!fpga_rst),
@@ -190,7 +190,7 @@ module miniLA_SoC (
         .d      (wdata_bridge2dram)
     );
     
-    // TODO: ÔÚ´ËÊµÀı»¯ÄãµÄÍâÉèI/O½Ó¿ÚµçÂ·Ä£¿é
+    // TODO: åœ¨æ­¤å®ä¾‹åŒ–ä½ çš„å¤–è®¾I/Oæ¥å£ç”µè·¯æ¨¡å—
     my_7_LEDS cpu_7seg_led(
         .rst        (rst_2_dig),
         .clk        (clk_2_dig),
