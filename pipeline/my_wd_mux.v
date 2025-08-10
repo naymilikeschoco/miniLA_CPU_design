@@ -17,7 +17,7 @@ module my_wd_mux(
         case(rf_wd_sel)
             `WD_C: RF_wD = ALU_C;
             `WD_f: RF_wD = {31'b0, ALU_f};
-            `WD_SEXT: RF_wD = Bus_rdata; //后续再拓展
+            `WD_SEXT: RF_wD = Bus_rdata; //潞贸脨酶脭脵脥脴脮鹿
             `WD_RDOB: begin
                 case(addr)
                     2'b00:  RF_wD = {24'b0, Bus_rdata[7:0]};
@@ -33,7 +33,7 @@ module my_wd_mux(
                 endcase
             `WD_RDO: RF_wD = Bus_rdata;
             `WD_PCB: RF_wD = pc4;
-            default: RF_wD = 32'b0;  // 添加默认情况
+            default: RF_wD = 32'b0;  // 脤铆录脫脛卢脠脧脟茅驴枚
         endcase
     end
     
