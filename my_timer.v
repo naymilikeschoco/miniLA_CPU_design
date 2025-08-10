@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-`include "defines.vh"
+`include "defines_pipeline.vh"
 
 module my_timer(
     input wire          rst,
@@ -11,7 +11,7 @@ module my_timer(
     output reg [31:0]   rdata
     );
     
-    reg [31:0] freq_reg; // è®¾ç½®çš„åˆ†é¢‘ç³»æ•°ä¹Ÿå³é˜ˆå€¼å¯„å­˜å™¨
+    reg [31:0] freq_reg; // ÉèÖÃµÄ·ÖÆµÏµÊıÒ²¼´ãĞÖµ¼Ä´æÆ÷
     reg [31:0] counter0;
     reg [31:0] counter1;
     
@@ -23,7 +23,7 @@ module my_timer(
             rdata <= 32'h0;
         end
         else begin
-            // è®¡æ•°å™¨é€»è¾‘
+            // ¼ÆÊıÆ÷Âß¼­
             if (counter1 == freq_reg) begin
                 counter1 <= 32'h0;
                 counter0 <= counter0 + 32'h1;
@@ -32,19 +32,19 @@ module my_timer(
                 counter1 <= counter1 + 1;
             end
             
-            // å†™æ“ä½œ
+            // Ğ´²Ù×÷
             if (wen) begin
                 if (addr == `PERI_ADDR_TIM) begin
-                    // å†™32ä½è®¡æ—¶å™¨çš„æ•°æ®
+                    // Ğ´32Î»¼ÆÊ±Æ÷µÄÊı¾İ
                     counter0 <= wdata;
                 end
                 else if (addr == `PERI_ADDR_FRE) begin
-                    // å†™åˆ†é¢‘ç³»æ•°
+                    // Ğ´·ÖÆµÏµÊı
                     freq_reg <= wdata;
                 end
             end
             
-            // è¯»æ•°æ®
+            // ¶ÁÊı¾İ
             rdata <= counter0;
         end
     end

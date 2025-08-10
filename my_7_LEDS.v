@@ -1,15 +1,15 @@
 `timescale 1ns / 1ps
 
 module my_7_LEDS(
-    input wire         clk,        // ç³»ç»Ÿæ—¶é’Ÿ(å»ºè®®50MHzæˆ–æ›´é«˜)
-    input wire         rst,        // å¤ä½ä¿¡å·(é«˜ç”µå¹³æœ‰æ•ˆ)
-    input wire         we,         // å†™ä½¿èƒ½
-    input wire [31:0]  wdata,      // å†™å…¥æ•°æ®(8ä½æ•°ç ç®¡æ•°æ®)
+    input wire         clk,        // ÏµÍ³Ê±ÖÓ(½¨Òé50MHz»ò¸ü¸ß)
+    input wire         rst,        // ¸´Î»ĞÅºÅ(¸ßµçÆ½ÓĞĞ§)
+    input wire         we,         // Ğ´Ê¹ÄÜ
+    input wire [31:0]  wdata,      // Ğ´ÈëÊı¾İ(8Î»ÊıÂë¹ÜÊı¾İ)
     output reg [7:0]   dig_en,
     output reg [7:0]   seg_data         
 );
 
-    // 7æ®µè¯‘ç è¡¨(å…±é˜´ææ•°ç ç®¡)
+    // 7¶ÎÒëÂë±í(¹²Òõ¼«ÊıÂë¹Ü)
     reg [7:0] seg_table [0:15];
     initial begin
         seg_table[0]  = 8'h3f; // 0
@@ -30,10 +30,10 @@ module my_7_LEDS(
         seg_table[15] = 8'h71; // F
     end
     
-    // æ˜¾ç¤ºæ•°æ®å¯„å­˜å™¨
+    // ÏÔÊ¾Êı¾İ¼Ä´æÆ÷
     reg [31:0] seg_reg;
     
-    // å†™å…¥æ•°æ®åˆ°æ˜¾ç¤ºå¯„å­˜å™¨
+    // Ğ´ÈëÊı¾İµ½ÏÔÊ¾¼Ä´æÆ÷
     always @(posedge clk or posedge rst) begin
         if (rst) begin
             seg_reg <= 32'h0;

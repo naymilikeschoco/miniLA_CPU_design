@@ -3,7 +3,7 @@
 module my_switches(
 //    input  wire           rst,
 //    input  wire           clk,
-    input  wire [15:0]    sw_input,   // 瀹為檯杩炴帴鐗╃悊鎷ㄧ爜寮�鍏崇殑杈撳叆
+    input  wire [15:0]    sw_input,   // 实际连接物理拨码开关的输入
     output wire [31:0]    rdata
     );
     
@@ -14,7 +14,7 @@ module my_switches(
 //            rdata <= 32'h00000000;
 //        end
 //        else begin
-//            //鍙
+//            //只读
 //            rdata <= {16'h0000, sw_input};
 //        end
 //    end
