@@ -262,7 +262,7 @@ module myCPU (
        // .have_inst      (ID_EX_have_inst)
     );
     
-    //ǰ��
+    //Ç°µÝ
     always @(posedge cpu_clk or posedge cpu_rst) begin
         if(cpu_rst)begin
             ID_EX_rd1       <= 0;
