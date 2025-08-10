@@ -1,7 +1,7 @@
 // Annotate this macro before synthesis
 // `define RUN_TRACE
 
-// TODO: 在此处定义你的宏
+// TODO: 鍦ㄦ澶勫畾涔変綘鐨勫畯
 //PC
 `define NPC_PC4  2'b00
 `define NPC_BRC  2'b01
@@ -62,7 +62,7 @@
 `define RAM_H  2'b01
 `define RAM_W  2'b10
 
-// 外设I/O接口电路的端口地址?
+// 澶栬I/O鎺ュ彛鐢佃矾鐨勭鍙ｅ湴鍧�?
 `define PERI_ADDR_DIG   32'hFFFF_F000
 `define PERI_ADDR_TIM   32'hFFFF_F020
 `define PERI_ADDR_FRE   32'hFFFF_F024
