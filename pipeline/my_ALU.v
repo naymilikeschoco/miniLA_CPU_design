@@ -10,7 +10,7 @@ module my_ALU(
     output reg          f 
     );
     
-    // ¼ÆËã±êÖ¾Î»f
+    // ì…•ç‚¬ê¹ƒç¾šè²«f
     always @(*) begin
         case (alu_op)
             `OP_BEQ:    f = (B == A);
@@ -32,9 +32,9 @@ module my_ALU(
             `OP_XOR:    C = A ^ B;
             `OP_SLL:    C = B << A[4:0];
             `OP_SRL:    C = B >> A[4:0];
-            `OP_SRA:    C = $signed(B) >>> A[4:0];  // ËãÊõÓÒÒÆ
-            `OP_SLL_12: C = A << 4'hc;  // ¹Ì¶¨ÒÆÎ»12Î»
-            `OP_PCADDU: C = (A << 4'hc) + B;  // ¹Ì¶¨ÒÆÎ»12Î»
+            `OP_SRA:    C = $signed(B) >>> A[4:0];  // ç‚¬æ¸›å¡˜ï¤³
+            `OP_SLL_12: C = A << 4'hc;  // ë¯¸ë•ï¤³è²«12è²«
+            `OP_PCADDU: C = (A << 4'hc) + B;  // ë¯¸ë•ï¤³è²«12è²«
             default:   C = 32'b00000000;
         endcase
     end
